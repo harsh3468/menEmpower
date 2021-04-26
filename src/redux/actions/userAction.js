@@ -1,4 +1,4 @@
-import {SET_USER,SET_ERRORS,CLEAR_ERRORS,LOADING_UI, SET_UNAUTHENTICATED,LOADING_USER, MARK_NOTIFICATION_READ} from '../types'
+import {SET_USER,SET_ERRORS,CLEAR_ERRORS,LOADING_UI,SET_RECOMMENDATION,UNSET_RECOMMENDATION,SET_UNAUTHENTICATED,LOADING_USER, MARK_NOTIFICATION_READ} from '../types'
 import axios from 'axios'
 export const loginUser = (userData,history)=>(dispatch)=>{
     
@@ -40,7 +40,7 @@ export const getUserData = ()=>(dispatch)=>{
 export const signupUser = (newUserData,history)=>(dispatch)=>{
     
     dispatch({type:LOADING_UI})
-    axios.post('/Signup',newUserData).then(res=>{
+    axios.post('/signup',newUserData).then(res=>{
         setAuthorizationHandler(res.data.token)
         dispatch(getUserData())
         dispatch({type:CLEAR_ERRORS})
@@ -88,3 +88,34 @@ export const markNotificationsRead = (notificationIds)=>dispatch=>{
         console.log(err)
     })
 }
+export const setRecommendation = ()=>(dispatch)=>{
+    axios.post(`/user/recommendation`,{recommendation:true}).then(res=>{
+        dispatch({
+            type:SET_RECOMMENDATION,
+            payload:true
+        
+        })
+    }).catch(err=>{
+        console.log(err)
+    })
+}
+export const unsetRecommendation = ()=>(dispatch)=>{
+    axios.post(`/user/recommendation`,{recommendation:false}).then(res=>{
+        dispatch({
+            type:SET_RECOMMENDATION,
+            payload:false
+        
+        })
+    }).catch(err=>{
+        console.log(err)
+    })
+}
+export const getRecommendation = ()=>(dispatch)=>{
+    axios.get('/user/recommendation').then(res=>{
+        dispatch({
+            type:SET_RECOMMENDATION,
+            payload:res.data.recommendation
+        })
+    }).catch(err=>{
+        console.log(err)
+    })}

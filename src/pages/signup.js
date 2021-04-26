@@ -19,8 +19,8 @@ const styles = {
           margin:'20px auto 20px 8rem'
       },
       images:{
-          width:'300px',
-          margin:'20px auto 20px 50px'
+          width:'160px',
+          margin:'5px auto 5px 120px'
       },
       innerBody:{
           background:'white',
@@ -85,7 +85,7 @@ class signup extends Component {
             <Grid item sm/>
             <Grid item lg className={classes.innerBody}>
             {loading?<LinearProgress color="primary" />:''}
-            <img src='./men.jpg' alt='MenEmpower' className={classes.images}></img>
+            <img src='./8200.png' alt='MenEmpower' className={classes.images}></img>
             <Typography className={classes.pageTitle} >Signup</Typography>
             <form noValidate onSubmit={this.handleSubmit} className={classes.TextField} >
             <TextField

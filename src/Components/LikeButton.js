@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 // Icons
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import store from '../redux/store'
 // REdux
 import { connect } from 'react-redux';
 import { likeScream, unlikeScream } from '../redux/actions/dataAction';
@@ -12,6 +13,7 @@ import { likeScream, unlikeScream } from '../redux/actions/dataAction';
 class LikeButton extends Component {
   likedScream = () => {
     if (
+     
       this.props.user.likes &&
       this.props.user.likes.find(
         (like) => like.screamId === this.props.screamId

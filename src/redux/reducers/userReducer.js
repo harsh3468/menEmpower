@@ -1,10 +1,11 @@
-import {SET_USER,SET_ERRORS,CLEAR_ERRORS,LOADING_UI, SET_AUTHENTICATED,SET_UNAUTHENTICATED,LOADING_USER,LIKE_SCREAM, UNLIKE_SCREAM, MARK_NOTIFICATION_READ} from '../types'
+import {SET_USER,SET_ERRORS,CLEAR_ERRORS,LOADING_UI,SET_RECOMMENDATION,UNSET_RECOMMENDATION,SET_AUTHENTICATED,SET_UNAUTHENTICATED,LOADING_USER,LIKE_SCREAM, UNLIKE_SCREAM, MARK_NOTIFICATION_READ} from '../types'
 const initialState={
     authenticated:false,
     loading:false,
     credentials:{},
     likes:[],
-    notifications:[]
+    notifications:[],
+    recommendation:false
 }
 export default function(state=initialState,action){
     switch(action.type){
@@ -15,8 +16,14 @@ export default function(state=initialState,action){
             }
         case SET_UNAUTHENTICATED:
             return initialState
+        case SET_RECOMMENDATION:
+            return{
+                    ...state,
+                   recommendation:action.payload
+                }
         case SET_USER:
             return{
+                recommendation:state.recommendation,
                 authenticated:true,
                 loading:false,
                 ...action.payload

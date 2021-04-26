@@ -8,10 +8,12 @@ import IconButton from '@material-ui/icons/Edit'
 import EditIcon from '@material-ui/icons/Edit'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { Dialog, DialogTitle, DialogContent, TextField, Button } from '@material-ui/core'
-import {postScream,clearErrors} from '../redux/actions/dataAction'
+import {postScream,screamImage,clearErrors} from '../redux/actions/dataAction'
 import AddIcon from '@material-ui/icons/Add'
 import CloseIcon from '@material-ui/icons/Close'
 import MyButton from '../utils/MyButton'
+import MultiSelect from './MultiSelect'
+
 const styles={
     form: {
         textAlign: 'center'
@@ -23,7 +25,7 @@ const styles={
         margin: '10px auto 10px auto'
       },
       textField: {
-        margin: '10px auto 10px auto'
+        margin: '10px auto 30px auto'
       },
       button: {
         marginTop: 20,
@@ -103,6 +105,9 @@ class PostScream extends Component{
     state = {
         open:false,
         body:'',
+        tags:'',
+        file:'',
+        loaction:'',
         errors:{}
     }
     componentWillReceiveProps(nextProps){
@@ -126,10 +131,24 @@ class PostScream extends Component{
     handleChange = (event)=>{
         this.setState({[event.target.name]:event.target.value})
     }
+    handleTags = (tags)=>{
+      this.setState({tags:tags})
+    }
+    handleImage=(event)=>{
+       this.setState({file:event.target.files[0]})     
+      }
     handleSubmit = (event)=>{
         event.preventDefault();
-        this.props.postScream({body:this.state.body})
-    }
+        if(this.state.file!=''){
+          const formData = new FormData()
+          formData.append('image',this.state.file,this.state.file.name)
+          this.props.screamImage(formData,(screamUrl)=>{
+            this.props.postScream({body:this.state.body,screamImage:screamUrl,tags:this.state.tags,location:this.state.location})
+          });
+        }else{
+          this.props.postScream({body:this.state.body,tags:this.state.tags,location:this.state.location})
+        }
+        }
     render(){
         const {errors} = this.state
         const {classes,UI:{loading}} = this.props
@@ -148,12 +167,18 @@ class PostScream extends Component{
                     
                     {loading?<LinearProgress color='primary'></LinearProgress>:''}
                     <TextField
-                    name='body' type='text' label='Scream' multiline rows="3" placeholder='post content here' helperText={errors.body} error={errors.body?true:false} className={classes.textField} onChange={this.handleChange} fullWidth>
+                    name='body' type='text' label='Scream' multiline rows="3" placeholder='post content here' helperText={errors.body} error={errors.body?true:false} className={classes.textField} onChange={this.handleChange} fullWidth required>
                     
                     </TextField>
+                    {/* <TextField type='text' label='Tags' placeholder='tags' name='tags' onChange={this.handleChange} fullWidth className={classes.textField}></TextField> */}
+                    <TextField type='text' label='Location' placeholder='location' name='location' onChange={this.handleChange}className={classes.textField} required></TextField> 
+                    <TextField type='file' style={{margin:"10px auto"}} name='file' onChange={this.handleImage} />
+                    <MultiSelect callback={this.handleTags} />
+                    <br/>
                     <Button type='submit' variant='contained' color='primary' className={classes.submitButton } disabled={loading} >
                         Post
                     </Button>
+                    
                     </form>
                 
                 </DialogContent>
@@ -169,14 +194,15 @@ class PostScream extends Component{
 PostScream.propTypes = {
     postScream:PropTypes.func.isRequired,
     clearErrors:PropTypes.func.isRequired,
+    screamImage:PropTypes.func.isRequired,
     UI:PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state)=>({
-    UI:state.UI
+    UI:state.UI,
 })
 const mapActionsToProps = {
-  clearErrors,postScream
+  clearErrors,postScream,screamImage
 }
 
 export default connect(mapStateToProps,mapActionsToProps)(withStyles(styles)(PostScream))

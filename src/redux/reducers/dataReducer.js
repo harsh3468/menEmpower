@@ -1,9 +1,11 @@
-import {SET_SCREAMS,SET_SCREAM,UNLIKE_SCREAM,LIKE_SCREAM,LOADING_DATA, DELETE_SCREAM,POST_SCREAM, SUBMIT_COMMENT} from '../types'
+import {SET_SCREAMS,FILTER_SCREAMS,SET_SCREAM,UNLIKE_SCREAM,LIKE_SCREAM,LOADING_DATA, DELETE_SCREAM,POST_SCREAM, SUBMIT_COMMENT, SET_TAGS} from '../types'
 import { act } from '@testing-library/react'
 
 const initialState = {
     screams:[],
+    filterScreams:[],
     scream:{},
+    tags:[],
     loading:false
 }
 
@@ -21,7 +23,17 @@ export default function(state=initialState,actions){
                 screams:actions.payload,
                 loading:false
             }
-        
+        case FILTER_SCREAMS:
+                return {
+                    ...state,
+                    filterScreams:actions.payload,
+                    loading:false
+                }
+        case SET_TAGS:
+                    return {
+                        ...state,
+                        tags:actions.payload,
+                    }
         case LIKE_SCREAM:
         case UNLIKE_SCREAM:   
             var index = state.screams.findIndex((scream)=>scream.screamId === actions.payload.screamId)
@@ -44,6 +56,10 @@ export default function(state=initialState,actions){
                 screams:[
                     actions.payload,
                     ...state.screams
+                ],
+                filterScreams:[
+                    actions.payload,
+                    ...state.screams
                 ]
             }
         case SET_SCREAM:
@@ -62,6 +78,8 @@ export default function(state=initialState,actions){
                 }
 
             }
+        case SET_TAGS:
+            return{...state,tags:actions.payload}
         default:
             return state
             

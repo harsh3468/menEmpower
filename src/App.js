@@ -16,7 +16,7 @@ import {SET_AUTHENTICATED, SET_UNAUTHENTICATED} from './redux/types'
 import {logoutUser,getUserData} from './redux/actions/userAction'
 import axios from 'axios';
 
-axios.defaults.baseURL = "https://us-central1-menempower-6bfc4.cloudfunctions.net/api" 
+axios.defaults.baseURL = "http://localhost:5000/menempower-6bfc4/us-central1/api" 
 const token = localStorage.getItem('fireToken')
 let authenticated;
 if(token){

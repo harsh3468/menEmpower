@@ -1,11 +1,16 @@
-import {SET_SCREAMS,SET_SCREAM,STOP_LOADING_UI,LOADING_DATA,LIKE_SCREAM,UNLIKE_SCREAM,DELETE_SCREAM, SET_ERRORS,CLEAR_ERRORS,LOADING_UI,POST_SCREAM, SUBMIT_COMMENT} from '../types'
+import {SET_SCREAMS,SET_SCREAM,FILTER_SCREAMS,SET_TAGS,STOP_LOADING_UI,LOADING_DATA,LIKE_SCREAM,UNLIKE_SCREAM,DELETE_SCREAM, SET_ERRORS,CLEAR_ERRORS,LOADING_UI,POST_SCREAM, SUBMIT_COMMENT} from '../types'
 import axios from 'axios'
+import { storage } from '../../firebase/firebase';
 
 export const getScreams = ()=>(dispatch)=>{
     dispatch({type:LOADING_DATA})
     axios.get('/getScreams').then(res=>{
         dispatch({
             type:SET_SCREAMS,
+            payload:res.data
+        })
+        dispatch({
+            type:FILTER_SCREAMS,
             payload:res.data
         })
     }).catch(err=>{
@@ -108,3 +113,45 @@ export const getUserData = (userHandle)=>dispatch=>{
         })
     })
 }
+export const getTags = ()=>dispatch=>{
+    dispatch({type:LOADING_DATA})
+    axios.get(`/scream/tags`).then(res=>{
+        dispatch({
+            type:SET_TAGS,
+            payload:res.data.tags      
+        })
+    }).catch(err=>{
+        console.log(err)
+        dispatch({
+            type:SET_TAGS,
+            payload:null
+        })
+    })
+}
+export const uploadFile=(fileUpload,callback)=>(dispatch)=>{
+    const ref = storage().ref();
+    const file = fileUpload
+    const name = (+new Date()) + '-' + file.name;
+    const metadata = {
+    contentType: file.type
+    };
+    const task = ref.child(name).put(file, metadata);
+    task
+    .then(snapshot => snapshot.ref.getDownloadURL())
+    .then((url) => {
+    callback(url)
+    console.log(url);
+  })
+  .catch(console.error);
+}
+
+export const screamImage = (formData,callback)=>(dispatch)=>{
+    axios.post('/scream/image',formData)
+    .then(res=>{
+        return callback(res.data.message)
+    }).catch(err=>{
+        console.log(err)
+    })
+    
+}
+

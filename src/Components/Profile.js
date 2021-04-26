@@ -65,8 +65,8 @@ const styles = {
           }
         },
         '& .profile-image': {
-          width: 200,
-          height: 200,
+          width: 150,
+          height: 150,
           objectFit: 'cover',
           maxWidth: '100%',
           borderRadius: '50%'
@@ -120,7 +120,7 @@ class Profile extends Component {
 
         const {classes,user:{credentials:{handle,createdAt,imageUrl,bio,website,location},loading,authenticated}} = this.props
         let profileMarkup = (!loading ? (authenticated?(
-            <Paper className={classes.paper}>
+            <Paper className={classes.paper} style={{position:'fixed',width:'300px'}}>
             <div className={classes.profile}>
                 <div className='image-wrapper'>
                     <img src={imageUrl} alt='profile' className='profile-image'/>
